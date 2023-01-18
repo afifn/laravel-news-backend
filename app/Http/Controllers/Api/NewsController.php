@@ -57,7 +57,7 @@ class NewsController extends Controller
     public function add(Request $request)
     {
 
-        $validate = [
+        $validation = [
             'id_category' => 'required|integer',
             'title' => 'required|string|max:255',
             'author' => 'required|string|max:100',
@@ -72,7 +72,7 @@ class NewsController extends Controller
             // 'poster' => null,
             'created_at' => now()
         ];
-        if ($request->validate($validate)) {
+        if ($request->validate($validation)) {
             News::create($data);
             $response = [
                 'error' => false,
@@ -80,5 +80,40 @@ class NewsController extends Controller
             ];
             return response()->json($response);
         }
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'id_category' => 'integer',
+            'title' => 'string',
+            'author' => 'string',
+            'content' => 'string',
+        ]);
+        $data = [
+            'id_category' => $request->input('id_category'),
+            'title' => $request->input('title'),
+            'author' => $request->input('author'),
+            'content' => $request->input('content')
+        ];
+        $news = News::find($id);
+        if ($news) {
+            $news->update($data);
+
+            $response = [
+                'error' => false,
+                'message' => 'data updated'
+            ];
+            return response()->json($response);
+        }
+    }
+    public function destroy($id = null)
+    {
+        News::find($id)->delete();
+        $response = [
+            'error' => false,
+            'message' => 'successfully delete item'
+        ];
+        return response()->json($response);
     }
 }

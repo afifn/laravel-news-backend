@@ -22,3 +22,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('news', [NewsController::class, 'index']);
 Route::get('news/{id}', [NewsController::class, 'show']);
 Route::post('news/insert', [NewsController::class, 'add']);
+Route::delete('news/delete/{id}', [NewsController::class, 'destroy']);
+Route::post('news/update/{id}', [NewsController::class, 'update']);
