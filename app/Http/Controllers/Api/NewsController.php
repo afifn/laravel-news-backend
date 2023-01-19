@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\News;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class NewsController extends Controller
@@ -76,7 +74,7 @@ class NewsController extends Controller
             News::create($data);
             $response = [
                 'error' => false,
-                'message' => 'success added data',
+                'message' => 'successfully added data',
             ];
             return response()->json($response);
         }
@@ -102,7 +100,7 @@ class NewsController extends Controller
 
             $response = [
                 'error' => false,
-                'message' => 'data updated'
+                'message' => 'successfully updated data'
             ];
             return response()->json($response);
         }
@@ -112,7 +110,7 @@ class NewsController extends Controller
         News::find($id)->delete();
         $response = [
             'error' => false,
-            'message' => 'successfully delete item'
+            'message' => 'successfully deleting item'
         ];
         return response()->json($response);
     }
