@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\News;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class NewsController extends Controller
@@ -54,13 +55,16 @@ class NewsController extends Controller
 
     public function add(Request $request)
     {
-
         $validation = [
             'id_category' => 'required|integer',
-            'title' => 'required|string|max:255',
+            'title' => 'required|string|max:255|unique:news,title',
             'author' => 'required|string|max:100',
             'content' => 'required|string',
         ];
+        $validator = Validator::make($request->all(), $validation);
+        if ($validator->fails()) {
+            return response()->json($validator->getMessageBag(), 400);
+        }
         $data = [
             'id_category' => $request->input('id_category'),
             'title' => $request->input('title'),
@@ -82,12 +86,15 @@ class NewsController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'id_category' => 'integer',
             'title' => 'string',
             'author' => 'string',
             'content' => 'string',
         ]);
+        if ($validator->fails()) {
+            return response()->json($validator->getMessageBag(), 400);
+        }
         $data = [
             'id_category' => $request->input('id_category'),
             'title' => $request->input('title'),
@@ -107,11 +114,19 @@ class NewsController extends Controller
     }
     public function destroy($id = null)
     {
-        News::find($id)->delete();
-        $response = [
-            'error' => false,
-            'message' => 'successfully deleting item'
-        ];
-        return response()->json($response);
+        $data = News::find($id);
+        if ($data) {
+            $data->delete();
+            $response = [
+                'error' => false,
+                'message' => 'successfully deleting item'
+            ];
+            return response()->json($response);
+        } else {
+            $response = [
+                'error' => true,
+            ];
+            return response()->json($response);
+        }
     }
 }
