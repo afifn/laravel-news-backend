@@ -26,8 +26,13 @@ class AuthController extends Controller
             if ($isValidPassword) {
                 $token = $this->generateToken($user);
                 return response()->json([
-                    'email' => $user->email,
-                    'token' => $token,
+                    'message' => 'login successfully',
+                    'error' => false,
+                    'loginResult' => [
+                        'id_user' => "$user->id_user",
+                        'name' => $user->name,
+                        'token' => $token,
+                    ]
                 ]);
             } else {
                 return response()->json(['message' => 'password wrong']);
