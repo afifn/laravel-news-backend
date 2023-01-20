@@ -10,16 +10,16 @@ use Illuminate\Support\Str;
 
 class NewsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $relationship = [
             'category' => function ($q) {
                 $q->select('*');
             }
         ];
-        $news = News::with($relationship)
-            ->orderBy('id_news', 'DESC')
-            ->paginate(5);
+        $size = $request->input('size');
+        $news = News::with($relationship)->orderBy('id_news', 'DESC')
+            ->paginate($size != null ? $size : 5);
         return response()->json([
             'error' => false,
             'message' => 'successfully fetch data',
